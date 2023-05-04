@@ -1,12 +1,13 @@
 # Load Balancer Security Group.
 #################################################
+
 resource "aws_security_group" "load_balancer_sg" {
   name        = "${var.project}_${var.env}_shared_lb_sg"
   description = "Allow Http/s Connection"
   vpc_id      = var.vpc_id
-
+  
   dynamic "ingress" {
-    for_each = [80, 443]
+    for_each = [80,443]
     iterator = from_port
     content {
         from_port   = from_port.value
