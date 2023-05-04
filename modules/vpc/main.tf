@@ -59,7 +59,8 @@ resource "aws_eip" "dev_eip"{
 
 resource "aws_nat_gateway" "dev-nat-gw" {
   allocation_id = aws_eip.dev_eip.id
-  subnet_id         = "subnet-0e504c87f66f1d2b5"
+  subnet_id         = aws_subnet.public_subnets[0].id
+  #subnet_id         = "subnet-0e504c87f66f1d2b5"
 }
 resource "aws_route_table" "private_route_table" {
  vpc_id = aws_vpc.dev-vpc.id
