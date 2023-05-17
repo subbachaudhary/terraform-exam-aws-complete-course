@@ -1,22 +1,26 @@
 # Load Balancer Security Group.
 #################################################
-
 resource "aws_security_group" "load_balancer_sg" {
-  name        = "${var.project}_${var.env}_shared_lb_sg"
+  name        = "${var.project_name}_${var.env}_shared_lb_sg"
   description = "Allow Http/s Connection"
   vpc_id      = var.vpc_id
-  
-  dynamic "ingress" {
-    for_each = [80,443]
-    iterator = from_port
-    content {
-        from_port   = from_port.value
-        to_port     = from_port.value
-        protocol    = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
-    
+
+  ingress {
+    description = "HTTP"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
   }
+  ingress {
+    description = "HTTPS"
+    from_port   = 443
+    to_port     = 443
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+
+  }
+
   egress {
     from_port        = 0
     to_port          = 0
@@ -26,12 +30,12 @@ resource "aws_security_group" "load_balancer_sg" {
   }
 
   tags = {
-    Name = "${var.project}_${var.env}_shared_lb_sg"
+    Name = "${var.project_name}_${var.env}_shared_lb_sg"
   }
 }
 
 resource "aws_security_group" "ec2_bastion_sg" {
-  name        = "${var.project}_${var.env}_bastion_sg"
+  name        = "${var.project_name}_${var.env}_bastion_sg"
   description = "Bastion host security group"
   vpc_id      = var.vpc_id
 
@@ -51,7 +55,7 @@ resource "aws_security_group" "ec2_bastion_sg" {
     ipv6_cidr_blocks = ["::/0"]
   }
   tags = {
-    Name = "${var.project}_${var.env}_bastion_sg"
+    Name = "${var.project_name}_${var.env}_bastion_sg"
   }
 }
 #################################################
@@ -60,7 +64,7 @@ resource "aws_security_group" "ec2_bastion_sg" {
 #EC2 Security Group
 #################################################
 resource "aws_security_group" "ec2_sg" {
-  name        = "${var.project}_${var.env}_ec2_sg"
+  name        = "${var.project_name}_${var.env}_ec2_sg"
   description = "EC2 instance beanstalk security groups"
   vpc_id      = var.vpc_id
 
@@ -91,7 +95,7 @@ resource "aws_security_group" "ec2_sg" {
     aws_security_group.load_balancer_sg
   ]
   tags = {
-    Name = "${var.project}_${var.env}_ec2_sg"
+    Name = "${var.project_name}_${var.env}_ec2_sg"
   }
 }
 #################################################
@@ -101,7 +105,7 @@ resource "aws_security_group" "ec2_sg" {
 # RDS Security Group
 #################################################
 resource "aws_security_group" "rds_sg" {
-  name        = "${var.project}_${var.env}_rds_sg"
+  name        = "${var.project_name}_${var.env}_rds_sg"
   description = "Security group for RDS"
   vpc_id      = var.vpc_id
 
@@ -116,7 +120,7 @@ resource "aws_security_group" "rds_sg" {
     aws_security_group.ec2_sg
   ]
   tags = {
-    Name = "${var.project}_${var.env}_rds_sg"
+    Name = "${var.project_name}_${var.env}_rds_sg"
   }
 }
 ###################################################
