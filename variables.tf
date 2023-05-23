@@ -79,3 +79,11 @@ variable "api_solution_stack_name" {
   type        = string
   description = "This is the api solution stack name"
 }
+# variable "lambda_subnet" {
+#     description = "define subnet for the lambda"
+#     type = string
+# }
+# variable "lambda_sg" {
+#     description = "defining lambda security grp"
+#     type = string
+# }
